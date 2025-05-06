@@ -1,0 +1,11 @@
+/* Grid View Styles */
+.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Flexible grid with 300px items */
+    gap: 1.5rem; /* Space between grid items */
+}
+
+/* List View Styles */
+.list-view {
+    display: block;
+}

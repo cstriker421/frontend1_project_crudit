@@ -5,11 +5,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>CRUDit</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link rel="stylesheet" href="style.css">
+        <style>
+            .monospace {
+              font-family: monospace;
+            }
+          </style>
     </head>
     <body class="section">
         <div class="container">
+            <div class="has-text-right mb-2">
+                <span id="current-time" class="is-size-6 has-text-grey-light monospace"></span>
+            </div>
+            <div class="has-text-right mb-2">
+                <button id="theme-toggle" class="button is-small is-info">Switch to Grid View</button>
+            </div>         
             <h1 class="title is-3 has-text-centered">📝 CRUDit – Your To-do App</h1>
-      
+    
             <form id="todo-form" class="box mb-5">
                 <div class="field">
                     <label class="label">Title</label>
@@ -17,33 +29,32 @@
                         <input class="input" type="text" id="title" placeholder="Todo title" required>
                     </div>
                 </div>
-      
+    
                 <div class="field">
                     <label class="label">Description</label>
                     <div class="control">
                         <textarea class="textarea" id="description" placeholder="Todo description" required></textarea>
                     </div>
                 </div>
-      
+    
                 <div class="field">
                     <label class="checkbox">
                         <input type="checkbox" id="completed">
                         Mark as completed
                     </label>
                 </div>
-      
+    
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
                         <button type="submit" id="submit-button" class="button is-link">Add Todo</button>
                     </div>
                 </div>
             </form>
-      
+    
             <hr>
-      
+    
             <div id="todo-list" class="content"></div>
         </div>
         <script src="scripts.js"></script>
     </body>
-      
 </html>

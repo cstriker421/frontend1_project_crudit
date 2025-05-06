@@ -1,0 +1,22 @@
+{
+    "name": "CRUDit",
+    "short_name": "CRUDit",
+    "description": "A simple to-do app with CRUD functionality",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4CAF50",
+    "icons": [
+      {
+        "src": "images/192x192.webp",
+        "sizes": "192x192",
+        "type": "image/webp"
+      },
+      {
+        "src": "images/512x512.webp",
+        "sizes": "512x512",
+        "type": "image/webp"
+      }
+    ]
+  }
+  

@@ -23,8 +23,8 @@ crudit/
 │   ├── 192x192.webp
 │   └── 512x512.webp
 ├── lighthouse-reports/
-│   ├── desktop.pdf
-│   └── mobile.pdf
+│   ├── desktop-report.html
+│   └── mobile-report.html
 ├── scripts.js
 ├── service-worker.js
 ├── style.css

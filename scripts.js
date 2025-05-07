@@ -113,7 +113,7 @@ function displayTodos(todos) {
             item.appendChild(form);
         } else {
             // Normal view
-            const title = document.createElement('h3');
+            const title = document.createElement('h2');
             title.innerHTML = `${todo.title} <span>${statusEmoji}</span>`;
 
             const desc = document.createElement('p');
@@ -126,10 +126,11 @@ function displayTodos(todos) {
             const toggleText = document.createElement('span');
             toggleText.className = 'has-text-link is-clickable';
             toggleText.style.cursor = 'pointer';
-            toggleText.textContent = `${statusEmoji} ${statusText}`;  // Display the emoji and text based on completion status
+            toggleText.textContent = `${statusEmoji} ${statusText}`; // Displays the emoji and text based on completion status
 
             toggleText.addEventListener('click', () => {
                 const updatedCompleted = !todo.completed;
+
                 updateTodo(todo.id, {
                     title: todo.title,
                     description: todo.description,
@@ -151,7 +152,7 @@ function displayTodos(todos) {
             deleteBtn.onclick = () => deleteTodo(todo.id);
 
             editBtn.className = 'button is-small is-warning mr-2';
-            deleteBtn.className = 'button is-small is-danger';
+            deleteBtn.className = 'button is-small is-danger is-light';
 
             item.appendChild(title);
             item.appendChild(desc);

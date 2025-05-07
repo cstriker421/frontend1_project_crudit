@@ -48,6 +48,34 @@ function displayTodos(todos) {
     const viewPreference = localStorage.getItem('viewMode') || 'list';  // Default to 'list' view if no preference
     container.className = viewPreference === 'grid' ? 'grid-view' : 'list-view';  // Apply view mode
 
+
+    const completedTodos = todos.filter(todo => todo.completed).length;
+    const totalTodos = todos.length;
+    const completionPercentage = totalTodos === 0 ? 0 : (completedTodos / totalTodos) * 100;
+
+    console.log(`Completed: ${completedTodos}, Total: ${totalTodos}, Completion: ${completionPercentage}`);
+
+    // Updates the progress bar with the calculated completion percentage
+    const progressBar = document.getElementById('completion-progress');
+    progressBar.setAttribute('percentage', completionPercentage.toFixed(0));  // Update progress bar
+
+    // Updates the percentage text dynamically
+    const percentageText = document.getElementById('completion-percentage');
+    
+    // Dynamically displays different text based on the number of completed tasks
+    let percentageMessage = '';
+    if (totalTodos === 0) {
+        percentageMessage = 'You have not added any tasks yet!';
+    } else if (completedTodos === 0) {
+        percentageMessage = 'You have not completed any tasks. You may need to get started.';
+    } else if (completedTodos === totalTodos) {
+        percentageMessage = 'Congratulations! All tasks are complete!';
+    } else {
+        percentageMessage = `Completed: ${Math.round(completionPercentage)}%`;
+    }
+
+    percentageText.textContent = percentageMessage;
+
     todos.forEach(todo => {
         const created = new Date(todo.createdAt).toLocaleString();
         const statusEmoji = todo.completed ? '✅' : '❌';
@@ -166,6 +194,54 @@ function displayTodos(todos) {
         container.appendChild(item);
     });
 }
+
+// Progress Bar Web Component
+class ProgressBar extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+
+    static get observedAttributes() {
+        return ['percentage']
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'percentage') {
+            this.render(); // Re-render when percentage changes
+        }
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    render() {
+        const percentage = this.getAttribute('percentage') || 0;
+
+        this.shadowRoot.innerHTML = `
+        <style>
+            .progress-bar {
+                width: 100%;
+                height: 20px;
+                background-color: #f0f0f0;
+                border-radius: 10px;
+            }
+            .progress-bar-inner {
+                height: 100%;
+                background-color: #00d1b2;
+                border-radius: 10px;
+                width: ${percentage}%;
+            }
+        </style>
+        <div class="progress-bar">
+            <div class="progress-bar-inner"></div>
+        </div>
+        `;
+    }
+}
+
+customElements.define('progress-bar', ProgressBar);
 
 function resetForm() {
     document.getElementById('todo-form').reset();

@@ -10,6 +10,7 @@ CRUDit is a lightweight, responsive to-do list app that allows users to **Create
 - Toggle completion status with an emoji indicator
 - Inline editing and dynamic view switching (List/Grid)
 - Live clock display with current date and time
+- A dynamic progress bar showing the percentage of completed tasks
 - LocalStorage support for view mode preferences
 - PWA enabled: offline access and installable
 - Responsive UI using [Bulma CSS](https://bulma.io/)
@@ -81,6 +82,8 @@ cd crudit
    - Stores view mode preference (`list` or `grid`) in `scripts.js`
 2. **PWA Configuration**  
    - Service worker (`service-worker.js`) and manifest (`manifest.json`) with installable support
+3. **Custom Web Component**
+   - Implements a custom <progress-bar> element that dynamically displays the percentage of completed todo items (`ProgressBar` class) defined in `scripts.js`, and used in the DOM (`<progress-bar>`) in `index.html`; percentage updates and dynamic text occurs through the logic in the `displayTodos` function in `scripts.js`
 
 ## 📋 License
 

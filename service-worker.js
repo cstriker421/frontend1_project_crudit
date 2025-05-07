@@ -1,12 +1,12 @@
 const CACHE_NAME = 'crudit-cache-v1';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/style.css',
-    '/scripts.js',
-    '/manifest.json',
-    '/images/192x192.webp',
-    '/images/512x512.webp'
+    './',
+    './index.html',
+    './style.css',
+    './scripts.js',
+    './manifest.json',
+    './images/192x192.webp',
+    './images/512x512.webp'
 ];
 
 // Installs the service worker and cache files

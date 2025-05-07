@@ -2,7 +2,7 @@
     "name": "CRUDit",
     "short_name": "CRUDit",
     "description": "A simple to-do app with CRUD functionality",
-    "start_url": "./",
+    "start_url": ".",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#4CAF50",

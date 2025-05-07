@@ -258,6 +258,19 @@ function submitInlineEdit(e, id) {
     editingItemId = null;
 }
 
+// Checks if the browser supports service workers
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(registration => {
+                console.log('Service Worker registered with scope: ', registration.scope);
+            })
+            .catch(error => {
+                console.log('Service Worker registration failed: ', error);
+            });
+    });
+}
+
 // Exposes functions for HTML onclick
 window.startInlineEdit = startInlineEdit;
 window.cancelInlineEdit = cancelInlineEdit;

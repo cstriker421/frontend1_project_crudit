@@ -11,6 +11,7 @@ CRUDit is a lightweight, responsive to-do list app that allows users to **Create
 - Inline editing and dynamic view switching (List/Grid)
 - Live clock display with current date and time
 - A dynamic progress bar showing the percentage of completed tasks
+- A dynamic and vibrant 'Emoji Meter' that reflects the percentage of completed tasks
 - LocalStorage support for view mode preferences
 - PWA enabled: offline access and installable
 - Responsive UI using [Bulma CSS](https://bulma.io/)
@@ -24,8 +25,8 @@ crudit/
 │   ├── 192x192.webp
 │   └── 512x512.webp
 ├── lighthouse-reports/
-│   ├── desktop-report.html
-│   └── mobile-report.html
+│   ├── desktop-report.pdf
+│   └── mobile-report.pdf
 ├── scripts.js
 ├── service-worker.js
 ├── style.css
@@ -71,7 +72,7 @@ cd crudit
    - Bulma CSS via CDN in `index.html`
 6. **Responsive for Mobile/Desktop**  
    - Achieved via Bulma + custom media-friendly layout in `style.css`
-7. **Lighthouse: All Green Scores**  
+7. **Lighthouse: All Green Scores (+90)**  
    - See `/lighthouse-reports/`
 8. **Hosted on GitHub Pages**  
    - Visit: [Deployed App](https://cstriker421.github.io/frontend1_project_crudit/)
@@ -79,11 +80,17 @@ cd crudit
 ## 🌟 Bonus
 
 1. **Uses localStorage**  
-   - Stores view mode preference (`list` or `grid`) in `scripts.js`
+   - Stores the user's preferred view mode (`list` or `grid`) in `scripts.js` via `localStorage` and applies it with `applyViewPreference()`
 2. **PWA Configuration**  
-   - Service worker (`service-worker.js`) and manifest (`manifest.json`) with installable support
+   - Implements offline support using a `service-worker.js` file and `manifest.json` for installable app support. Registered in `scripts.js`
 3. **Custom Web Component**
-   - Implements a custom <progress-bar> element that dynamically displays the percentage of completed todo items (`ProgressBar` class) defined in `scripts.js`, and used in the DOM (`<progress-bar>`) in `index.html`; percentage updates and dynamic text occurs through the logic in the `displayTodos` function in `scripts.js`
+   - Implements a custom `<progress-bar>` element defined via the `ProgressBar` class in `scripts.js`
+   - Rendered in `index.html` and dynamically updated by the `displayTodos` function in `scripts.js`, reflecting the percentage of completed todos
+4. **Canvas**
+   - Uses a `<canvas>` element (`<canvas id="emoji-meter">`) defined in `index.html` to visually represent progress
+   - The `drawEmojiMeter()` function in `scripts.js` updates the emoji based on the number of completed tasks:
+      - 😟, 🙁, 🙂, 😁, 🤩 — and 🙃 when there are no tasks
+   - This logic is triggered inside `displayTodos()`
 
 ## 📋 License
 

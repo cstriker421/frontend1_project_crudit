@@ -2,11 +2,80 @@ const API_BASE = 'https://681906d15a4b07b9d1d1bbd7.mockapi.io/api/v1/todos';
 
 let editingItemId = null;
 
+// Progress Bar Web Component
+class ProgressBar extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+
+    static get observedAttributes() {
+        return ['percentage'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'percentage') {
+            this.render();
+        }
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    render() {
+        const percentage = this.getAttribute('percentage') || 0;
+        this.shadowRoot.innerHTML = `
+        <style>
+            .progress-bar {
+                width: 100%;
+                height: 20px;
+                background-color: #f0f0f0;
+                border-radius: 10px;
+            }
+            .progress-bar-inner {
+                height: 100%;
+                background-color: #00d1b2;
+                border-radius: 10px;
+                width: ${percentage}%;
+            }
+        </style>
+        <div class="progress-bar">
+            <div class="progress-bar-inner"></div>
+        </div>
+        `;
+    }
+}
+
+customElements.define('progress-bar', ProgressBar);
+
+// Canvas Emoji Meter
+function drawEmojiMeter(percentage, totalTodos) {
+    const canvas = document.getElementById('emoji-meter');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let emoji = '🙃';
+    if (totalTodos > 0) {
+        if (percentage === 0) emoji = '😟';
+        else if (percentage <= 33) emoji = '🙁';
+        else if (percentage <= 66) emoji = '🙂';
+        else if (percentage < 100) emoji = '😁';
+        else emoji = '🤩';
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = '64px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, canvas.width / 2, canvas.height / 2);
+}
+
 // Loads todos on page load
 window.addEventListener('DOMContentLoaded', () => {
-    fetchTodos();  // Fetch todos from MockAPI
-    startClock();  // Start the live clock
-    applyViewPreference();  // Apply stored view preference (list/grid)
+    fetchTodos();
+    startClock();
+    applyViewPreference();
 });
 
 async function fetchTodos() {
@@ -45,24 +114,19 @@ function displayTodos(todos) {
     const container = document.getElementById('todo-list');
     container.innerHTML = '';
 
-    const viewPreference = localStorage.getItem('viewMode') || 'list';  // Default to 'list' view if no preference
-    container.className = viewPreference === 'grid' ? 'grid-view' : 'list-view';  // Apply view mode
-
+    const viewPreference = localStorage.getItem('viewMode') || 'list';
+    container.className = viewPreference === 'grid' ? 'grid-view' : 'list-view';
 
     const completedTodos = todos.filter(todo => todo.completed).length;
     const totalTodos = todos.length;
     const completionPercentage = totalTodos === 0 ? 0 : (completedTodos / totalTodos) * 100;
 
-    console.log(`Completed: ${completedTodos}, Total: ${totalTodos}, Completion: ${completionPercentage}`);
+    drawEmojiMeter(completionPercentage, totalTodos);
 
-    // Updates the progress bar with the calculated completion percentage
     const progressBar = document.getElementById('completion-progress');
-    progressBar.setAttribute('percentage', completionPercentage.toFixed(0));  // Update progress bar
+    progressBar.setAttribute('percentage', completionPercentage.toFixed(0));
 
-    // Updates the percentage text dynamically
     const percentageText = document.getElementById('completion-percentage');
-    
-    // Dynamically displays different text based on the number of completed tasks
     let percentageMessage = '';
     if (totalTodos === 0) {
         percentageMessage = 'You have not added any tasks yet!';
@@ -73,7 +137,6 @@ function displayTodos(todos) {
     } else {
         percentageMessage = `Completed: ${Math.round(completionPercentage)}%`;
     }
-
     percentageText.textContent = percentageMessage;
 
     todos.forEach(todo => {
@@ -83,8 +146,7 @@ function displayTodos(todos) {
 
         const item = document.createElement('div');
         item.className = 'box mb-4';
-        
-        // Handle the case where an item is being edited
+
         if (editingItemId === todo.id) {
             const form = document.createElement('form');
             form.onsubmit = (e) => submitInlineEdit(e, todo.id);
@@ -140,7 +202,6 @@ function displayTodos(todos) {
 
             item.appendChild(form);
         } else {
-            // Normal view
             const title = document.createElement('h2');
             title.innerHTML = `${todo.title} <span>${statusEmoji}</span>`;
 
@@ -150,15 +211,12 @@ function displayTodos(todos) {
             const date = document.createElement('small');
             date.textContent = `Created: ${created}`;
 
-            // Create the toggle text with emoji and dynamic status
             const toggleText = document.createElement('span');
             toggleText.className = 'has-text-link is-clickable';
             toggleText.style.cursor = 'pointer';
-            toggleText.textContent = `${statusEmoji} ${statusText}`; // Displays the emoji and text based on completion status
-
+            toggleText.textContent = `${statusEmoji} ${statusText}`;
             toggleText.addEventListener('click', () => {
                 const updatedCompleted = !todo.completed;
-
                 updateTodo(todo.id, {
                     title: todo.title,
                     description: todo.description,
@@ -174,12 +232,11 @@ function displayTodos(todos) {
             const editBtn = document.createElement('button');
             editBtn.textContent = 'Edit';
             editBtn.onclick = () => startInlineEdit(todo.id);
+            editBtn.className = 'button is-small is-warning mr-2';
 
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = 'Delete';
             deleteBtn.onclick = () => deleteTodo(todo.id);
-
-            editBtn.className = 'button is-small is-warning mr-2';
             deleteBtn.className = 'button is-small is-danger is-light';
 
             item.appendChild(title);
@@ -187,68 +244,20 @@ function displayTodos(todos) {
             item.appendChild(date);
             item.appendChild(document.createElement('br'));
             item.appendChild(toggleContainer);
-            item.appendChild(document.createElement('br'))
+            item.appendChild(document.createElement('br'));
             item.appendChild(editBtn);
             item.appendChild(deleteBtn);
         }
+
         container.appendChild(item);
     });
 }
-
-// Progress Bar Web Component
-class ProgressBar extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-    }
-
-    static get observedAttributes() {
-        return ['percentage']
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'percentage') {
-            this.render(); // Re-render when percentage changes
-        }
-    }
-
-    connectedCallback() {
-        this.render();
-    }
-
-    render() {
-        const percentage = this.getAttribute('percentage') || 0;
-
-        this.shadowRoot.innerHTML = `
-        <style>
-            .progress-bar {
-                width: 100%;
-                height: 20px;
-                background-color: #f0f0f0;
-                border-radius: 10px;
-            }
-            .progress-bar-inner {
-                height: 100%;
-                background-color: #00d1b2;
-                border-radius: 10px;
-                width: ${percentage}%;
-            }
-        </style>
-        <div class="progress-bar">
-            <div class="progress-bar-inner"></div>
-        </div>
-        `;
-    }
-}
-
-customElements.define('progress-bar', ProgressBar);
 
 function resetForm() {
     document.getElementById('todo-form').reset();
     document.getElementById('submit-button').textContent = 'Add Todo';
 }
 
-// Handles form submit
 document.getElementById('todo-form').addEventListener('submit', function (e) {
     e.preventDefault();
     const title = document.getElementById('title').value.trim();
@@ -266,29 +275,22 @@ document.getElementById('todo-form').addEventListener('submit', function (e) {
     resetForm();
 });
 
-// Function to apply view preference from localStorage
 function applyViewPreference() {
     const viewMode = localStorage.getItem('viewMode') || 'list';
     document.getElementById('theme-toggle').textContent = viewMode === 'grid' ? 'Switch to List View' : 'Switch to Grid View';
 
     const container = document.getElementById('todo-list');
-    container.className = viewMode === 'grid' ? 'grid-view' : 'list-view'; // Applies correct class for the view
+    container.className = viewMode === 'grid' ? 'grid-view' : 'list-view';
 }
 
-// Switches between list and grid view modes
 document.getElementById('theme-toggle').addEventListener('click', () => {
     const currentView = localStorage.getItem('viewMode') || 'list';
     const newView = currentView === 'list' ? 'grid' : 'list';
-
-    // Store the new view mode in localStorage
     localStorage.setItem('viewMode', newView);
-
-    // Apply the new view preference and refresh the todos
     applyViewPreference();
-    fetchTodos(); // Refresh todos after changing the view
+    fetchTodos();
 });
 
-// Clock and Date
 function startClock() {
     const clock = document.getElementById('current-time');
     if (!clock) return;
@@ -302,15 +304,13 @@ function startClock() {
         const dayName = capitalize(now.toLocaleDateString(undefined, { weekday: 'long' }));
         const timeString = now.toLocaleTimeString();
         const dateString = now.toLocaleDateString();
-        
         clock.textContent = `${dayName}, ${dateString} ${timeString}`;
     }, 1000);
 }
 
-// Inline editing functions
 function startInlineEdit(id) {
     editingItemId = id;
-    fetchTodos(); // Re-renders list with edit form
+    fetchTodos();
 }
 
 function cancelInlineEdit() {
@@ -323,19 +323,18 @@ function submitInlineEdit(e, id) {
     const title = document.getElementById(`edit-title-${id}`).value.trim();
     const description = document.getElementById(`edit-description-${id}`).value.trim();
     const completed = document.getElementById(`edit-completed-${id}`).checked;
-    const createdAt = new Date().toISOString(); // Optionally keeps original date
-  
+    const createdAt = new Date().toISOString();
+
     if (!title || !description) {
         alert("Both fields are required.");
         return;
     }
-  
+
     const updatedData = { title, description, completed, createdAt };
     updateTodo(id, updatedData);
     editingItemId = null;
 }
 
-// Checks if the browser supports service workers
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')
@@ -348,7 +347,6 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Exposes functions for HTML onclick
 window.startInlineEdit = startInlineEdit;
 window.cancelInlineEdit = cancelInlineEdit;
 window.submitInlineEdit = submitInlineEdit;

@@ -29,39 +29,53 @@
                 <progress-bar id="completion-progress" percentage="0"></progress-bar>
             </div>
             <div id="completion-percentage" class="has-text-centered is-size-5" style="margin-bottom: 20px;"></div>
-            <form id="todo-form" class="box mb-5">
-                <div class="field">
-                    <label class="label">Title</label>
-                    <div class="control">
-                        <input class="input" type="text" id="title" placeholder="Todo title" required>
-                    </div>
+            <div id="todo-modal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Add Todo</p>
+                        <button class="delete" aria-label="close" id="close-modal-btn"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <form id="todo-form">
+                            <div class="field">
+                                <label class="label">Title</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="title" placeholder="Todo title" required>
+                                </div>
+                            </div>
+              
+                            <div class="field">
+                                <label class="label">Description</label>
+                                <div class="control">
+                                    <textarea class="textarea" id="description" placeholder="Todo description" required></textarea>
+                                </div>
+                            </div>
+              
+                            <div class="field">
+                                <label class="checkbox">
+                                    <input type="checkbox" id="completed">
+                                    Mark as completed
+                                </label>
+                            </div>
+                        </form>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button type="submit" form="todo-form" class="button is-link">Add Todo</button>
+                        <button class="button" id="cancel-modal-btn">Cancel</button>
+                    </footer>
                 </div>
-    
-                <div class="field">
-                    <label class="label">Description</label>
-                    <div class="control">
-                        <textarea class="textarea" id="description" placeholder="Todo description" required></textarea>
-                    </div>
-                </div>
-    
-                <div class="field">
-                    <label class="checkbox">
-                        <input type="checkbox" id="completed">
-                        Mark as completed
-                    </label>
-                </div>
-    
-                <div class="field is-grouped is-grouped-right">
-                    <div class="control">
-                        <button type="submit" id="submit-button" class="button is-link">Add Todo</button>
-                    </div>
-                </div>
-            </form>
-    
+            </div>
+
             <hr>
-    
+
             <div id="todo-list" class="content"></div>
         </div>
+        <button id="toggle-form-btn"
+            class="button is-link is-rounded is-large has-text-weight-bold"
+            style="position: fixed; bottom: 20px; right: 20px; z-index: 100;">
+            +
+        </button>
         <script src="scripts.js"></script>
     </body>
 </html>

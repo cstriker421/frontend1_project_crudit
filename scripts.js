@@ -347,6 +347,32 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// New Form Logic
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("toggle-form-btn");
+    const modal = document.getElementById("todo-modal");
+    const closeBtn = document.getElementById("close-modal-btn");
+    const cancelBtn = document.getElementById("cancel-modal-btn");
+    const todoForm = document.getElementById("todo-form");
+
+    function openModal() {
+        modal.classList.add("is-active");
+    }
+
+    function closeModal() {
+        modal.classList.remove("is-active");
+    }
+
+    toggleBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener("click", closeModal);
+
+    // Auto-close on form submit
+    todoForm.addEventListener("submit", function () {
+        closeModal();
+    });
+});
+
 window.startInlineEdit = startInlineEdit;
 window.cancelInlineEdit = cancelInlineEdit;
 window.submitInlineEdit = submitInlineEdit;
